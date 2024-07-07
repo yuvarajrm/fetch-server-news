@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Feed</title>
+    <style>
+        /* Basic CSS for styling */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+         }
+        
+         .marquee-container {
+    z-index: 1000;
+    position: fixed;
+    bottom: 0;
+    right: 50px; /* Adjust as needed */
+}
+
+#closeIcon {
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 10px; /* Space between marquee and close icon */
+}
+
+#newsFeed.closed {
+    display: none;
+}
+        .container{
+            background-color: red;
+            padding: 15px;
+            height: 100%;
+            
+        }
+        .child{
+            background-color: rgb(3, 0, 209);
+            padding: 20px;
+         }
+        
+    </style>
+</head>
+<body>
+    <h1>Latest News</h1>
+    <div class="container">
+        <div class="child">sdsdsd</div>
+    </div>
+    <div class="marquee-container">
+        <marquee id="newsFeed"></marquee>
+        <span id="closeIcon" class="close-icon">&times;</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const newsFeed = document.getElementById('newsFeed');
+
+            function fetchNews() {
+                fetch('http://localhost:3000/news')
+                    .then(response => response.json())
+                    .then(data => {
+                        newsFeed.innerHTML = ''; // Clear the current news items
+                        data.articles.forEach(article => {
+                            const newsItem = document.createElement('div');
+                            newsItem.classList.add('news-item');
+                            newsItem.innerHTML = `  
+                                <h2>${article.title}</h2>
+                             `;
+                            newsFeed.appendChild(newsItem);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching news:', error);
+                        newsFeed.innerHTML = '<p>Failed to fetch news. Please try again later.</p>';
+                    });
+            }
+
+            // Fetch news immediately upon loading
+            fetchNews();
+
+            // Set interval to fetch news every 5 seconds (5000 milliseconds)
+            setInterval(fetchNews, 9000);
+        });
+    </script>
+    
+      <script>
+        const newsFeed = document.getElementById('newsFeed');
+        const closeIcon = document.getElementById('closeIcon');
+
+        // Check if the marquee was previously closed using localStorage
+        const isClosed = localStorage.getItem('marqueeClosed') === 'true';
+        if (isClosed) {
+            newsFeed.classList.add('closed');
+        }
+
+        // Add click event listener to the close icon
+        closeIcon.addEventListener('click', function() {
+            // Toggle the 'closed' class
+            newsFeed.classList.toggle('closed');
+
+            // Update localStorage
+            localStorage.setItem('marqueeClosed', newsFeed.classList.contains('closed'));
+        });
+    </script>
+</body>
+</html>
