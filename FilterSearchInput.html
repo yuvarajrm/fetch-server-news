@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #333;
+            padding: 1rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-bar {
+            width: 300px;
+            padding: 0.5rem;
+        }
+        .container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        .card {
+            padding: 20px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Card Search</h1>
+        <input type="text" class="search-bar" id="searchInput" placeholder="Search cards...">
+    </div>
+    <div class="container" id="cardContainer">
+        <!-- Cards will be generated here by JavaScript -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cardContainer = document.getElementById('cardContainer');
+            const searchInput = document.getElementById('searchInput');
+
+            // Generate random cards
+            const cardValues = Array.from({ length: 20 }, () => Math.random().toString(36).substring(2, 7));
+            cardValues.forEach(value => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = value;
+                cardContainer.appendChild(card);
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', function () {
+                const filter = searchInput.value.toLowerCase();
+                const cards = document.querySelectorAll('.card');
+
+                cards.forEach(card => {
+                    const cardText = card.innerHTML.toLowerCase();
+                    if (cardText.includes(filter)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // If search input is empty, display all cards
+                if (filter === '') {
+                    cards.forEach(card => {
+                        card.style.display = '';
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
